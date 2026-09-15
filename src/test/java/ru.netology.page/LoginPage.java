@@ -11,13 +11,15 @@ public class LoginPage {
     private SelenideElement loginButton = $("[data-test-id='action-login']");
 
     public VerificationPage validLogin(String login, String password) {
-        loginField.setValue(login);
-        passwordField.setValue(password);
-        loginButton.click();
+        enterCredentialsAndClick(login, password);
         return new VerificationPage();
     }
 
     public void invalidLogin(String login, String password) {
+        enterCredentialsAndClick(login, password);
+    }
+
+    private void enterCredentialsAndClick(String login, String password) {
         loginField.setValue(login);
         passwordField.setValue(password);
         loginButton.click();

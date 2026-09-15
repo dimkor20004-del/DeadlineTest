@@ -1,6 +1,9 @@
 package ru.netology.page;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+
+import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$;
 
@@ -11,17 +14,17 @@ public class VerificationPage {
     private SelenideElement errorNotification = $("[data-test-id='error-notification']");
 
     public DashboardPage validVerify(String code) {
-        codeField.setValue(code);
-        verifyButton.click();
+        enterCodeAndClick(code);
         return new DashboardPage();
     }
 
     public void invalidVerify(String code) {
-        codeField.setValue(code);
-        verifyButton.click();
+        enterCodeAndClick(code);
+        errorNotification.shouldBe(Condition.visible, Duration.ofSeconds(10));
     }
 
-    public SelenideElement getErrorNotification() {
-        return errorNotification;
+    private void enterCodeAndClick(String code) {
+        codeField.setValue(code);
+        verifyButton.click();
     }
 }
