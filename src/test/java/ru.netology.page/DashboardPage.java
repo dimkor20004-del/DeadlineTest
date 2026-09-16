@@ -9,10 +9,11 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class DashboardPage {
 
-    private SelenideElement heading = $("h2");
+    private SelenideElement heading = $("[data-test-id='dashboard']");
 
     public DashboardPage checkHeadingVisible() {
         heading.shouldBe(Condition.visible, Duration.ofSeconds(20));
+        heading.shouldHave(Condition.text("Личный кабинет"));
         return this;
     }
 }
