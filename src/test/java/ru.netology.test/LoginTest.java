@@ -1,5 +1,6 @@
 package ru.netology.test;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.data.UserData;
@@ -8,8 +9,6 @@ import ru.netology.page.LoginPage;
 import ru.netology.page.VerificationPage;
 import ru.netology.utils.DataHelper;
 import ru.netology.utils.DbUtils;
-
-import java.sql.SQLException;
 
 import static com.codeborne.selenide.Selenide.open;
 
@@ -20,8 +19,13 @@ public class LoginTest {
         open("http://localhost:9999");
     }
 
+    @AfterAll
+    public static void cleanUp() {
+        DbUtils.cleanDatabase();
+    }
+
     @Test
-    public void testValidLogin() throws SQLException {
+    public void testValidLogin() {
         UserData user = DataHelper.getValidUser();
         LoginPage loginPage = new LoginPage();
         VerificationPage verificationPage = loginPage.validLogin(user.getLogin(), user.getPassword());
@@ -32,15 +36,12 @@ public class LoginTest {
     }
 
     @Test
-    public void testBlockedAfterThreeWrongPasswords() {
+    public void testInvalidLogin() {
         UserData user = DataHelper.getValidUser();
-
-        for (int i = 0; i < 3; i++) {
-            LoginPage loginPage = new LoginPage();
-            loginPage.invalidLogin(user.getLogin(), "wrongPassword");
-        }
+        String wrongPassword = DataHelper.getRandomPassword();
 
         LoginPage loginPage = new LoginPage();
-        loginPage.invalidLogin(user.getLogin(), user.getPassword());
+        loginPage.invalidLogin(user.getLogin(), wrongPassword);
+        loginPage.checkLoginError();
     }
 }
